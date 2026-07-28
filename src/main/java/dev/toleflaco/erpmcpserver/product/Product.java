@@ -1,6 +1,7 @@
 package dev.toleflaco.erpmcpserver.product;
 
 import dev.toleflaco.erpmcpserver.supplier.Supplier;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +23,11 @@ public class Product {
 
     private String name;
     private String category;
+
+    // TODO(sesion-15): revisar precision/scale al migrar a PostgreSQL
+    @Column(nullable = false)
     private BigDecimal unitPrice;
+
     private int stock;
     private int minStock;
 
