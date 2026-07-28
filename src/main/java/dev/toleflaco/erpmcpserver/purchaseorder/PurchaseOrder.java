@@ -1,6 +1,7 @@
 package dev.toleflaco.erpmcpserver.purchaseorder;
 
 import dev.toleflaco.erpmcpserver.supplier.Supplier;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,11 +12,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Table(name = "purchase_orders")
@@ -33,8 +38,12 @@ public class PurchaseOrder {
     @Column(nullable = false)
     private PurchaseOrderStatus status;
 
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PurchaseOrderLine> lines = new ArrayList<>();
+
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
+
 
     protected PurchaseOrder() {
     }
@@ -67,5 +76,20 @@ public class PurchaseOrder {
 
     public void setStatus(PurchaseOrderStatus status) {
         this.status = status;
+    }
+
+    public List<PurchaseOrderLine> getLines() {
+        return Collections.unmodifiableList(lines);
+    }
+
+    // Métodos helper
+    public void addLine(PurchaseOrderLine line) {
+        lines.add(line);
+        line.setPurchaseOrder(this);
+    }
+
+    public void removeLine(PurchaseOrderLine line) {
+        lines.remove(line);
+        line.setPurchaseOrder(null);
     }
 }
