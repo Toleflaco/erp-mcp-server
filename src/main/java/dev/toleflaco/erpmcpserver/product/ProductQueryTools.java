@@ -4,7 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class ProductQueryTools {
@@ -22,15 +22,32 @@ public class ProductQueryTools {
     public ProductInfo getProduct(Long id) {
 
         return productRepository.findById(id)
-                .map(product -> new ProductInfo(
-                        product.getId(),
-                        product.getName(),
-                        product.getCategory(),
-                        product.getUnitPrice(),
-                        product.getStock(),
-                        product.getMinStock(),
-                        product.getSupplier().getName()
-                ))
+                .map(this::toDto)
                 .orElse(null);
+    }
+
+
+    @Transactional(readOnly = true)
+    @Tool(description = "List all products that have reached or fallen below their minimum stock threshold. " +
+            "Use this to identify which products need to be reordered. " +
+            "Returns product name, category, unit price, current stock, " +
+            "minimum stock threshold, and supplier name.")
+    public List<ProductInfo> listLowStockProducts() {
+        return productRepository.findLowStockProducts()
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    private ProductInfo toDto(Product product) {
+        return new ProductInfo(
+                product.getId(),
+                product.getName(),
+                product.getCategory(),
+                product.getUnitPrice(),
+                product.getStock(),
+                product.getMinStock(),
+                product.getSupplier().getName()
+        );
     }
 }
