@@ -9,4 +9,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     @Query("SELECT p FROM Product p WHERE p.stock <= p.minStock")
     List<Product> findLowStockProducts();
+
+    List<Product> findByCategory(String category);
 }

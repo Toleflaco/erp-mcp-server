@@ -1,8 +1,9 @@
 package dev.toleflaco.erpmcpserver.product;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -50,4 +51,17 @@ public class ProductQueryTools {
                 product.getSupplier().getName()
         );
     }
+
+    @Transactional(readOnly = true)
+    @Tool(description = "Returns all products belonging to the specified category, enabling catalog exploration by product family.")
+    public List<ProductInfo> findProductsByCategory(
+            @ToolParam(description = "Category name in uppercase (e.g., COFFEE, DAIRY, TEA, SWEETENERS, EQUIPMENT, PACKAGING)." ) String category) {
+
+        return productRepository.findByCategory(category)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
 }
+
