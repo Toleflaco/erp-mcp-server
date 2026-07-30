@@ -1,6 +1,7 @@
 package dev.toleflaco.erpmcpserver;
 
 import dev.toleflaco.erpmcpserver.product.ProductQueryTools;
+import dev.toleflaco.erpmcpserver.supplier.SupplierQueryTools;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.boot.SpringApplication;
@@ -16,9 +17,9 @@ public class ErpMcpServerApplication {
 
 
 	@Bean
-    ToolCallbackProvider erpTools(ProductQueryTools productQueryTools) {
+    ToolCallbackProvider erpTools(ProductQueryTools productQueryTools, SupplierQueryTools supplierQueryTools) {
 		return MethodToolCallbackProvider.builder()
-				.toolObjects(productQueryTools)
+				.toolObjects(productQueryTools,supplierQueryTools)
 				.build();
 	}
 
