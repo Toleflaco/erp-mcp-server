@@ -22,7 +22,7 @@ public class PurchaseOrderQueryTools {
             "and list of purchase order lines.")
     public PurchaseOrderInfo getPurchaseOrder(Long id) {
 
-        return purchaseOrderRepository.findById(id)
+        return purchaseOrderRepository.findByIdWithLinesAndProducts(id)
                 .map(this::toDto)
                 .orElse(null);
     }
