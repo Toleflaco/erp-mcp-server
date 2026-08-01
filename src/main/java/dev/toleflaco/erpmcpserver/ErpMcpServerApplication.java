@@ -4,6 +4,7 @@ import dev.toleflaco.erpmcpserver.invoice.InvoiceQueryTools;
 import dev.toleflaco.erpmcpserver.product.ProductQueryTools;
 import dev.toleflaco.erpmcpserver.purchaseorder.PurchaseOrderQueryTools;
 import dev.toleflaco.erpmcpserver.supplier.SupplierQueryTools;
+import dev.toleflaco.erpmcpserver.supplier.SupplierWriteTools;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.boot.SpringApplication;
@@ -23,9 +24,9 @@ public class ErpMcpServerApplication {
             ProductQueryTools productQueryTools,
             SupplierQueryTools supplierQueryTools,
             PurchaseOrderQueryTools purchaseOrderQueryTools,
-            InvoiceQueryTools invoiceQueryTools) {
+            InvoiceQueryTools invoiceQueryTools, SupplierWriteTools supplierWriteTools) {
         return MethodToolCallbackProvider.builder()
-                .toolObjects(productQueryTools, supplierQueryTools, purchaseOrderQueryTools, invoiceQueryTools)
+                .toolObjects(productQueryTools, supplierQueryTools, purchaseOrderQueryTools, invoiceQueryTools, supplierWriteTools)
                 .build();
     }
 
