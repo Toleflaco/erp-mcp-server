@@ -27,7 +27,7 @@ public class PurchaseOrderQueryTools {
     public PurchaseOrderInfo getPurchaseOrder(Long id) {
 
         return purchaseOrderRepository.findByIdWithLinesAndProducts(id)
-                .map(this::toInfo)
+                .map(PurchaseOrderMapper::toInfo)
                 .orElse(null);
     }
 
@@ -52,36 +52,5 @@ public class PurchaseOrderQueryTools {
     }
 
 
-    private PurchaseOrderInfo toInfo(PurchaseOrder purchaseOrder) {
 
-        return new PurchaseOrderInfo(
-                purchaseOrder.getId(),
-                purchaseOrder.getSupplier().getName(),
-                purchaseOrder.getStatus(),
-                purchaseOrder.getCreatedAt(),
-                calculateOrderTotal(purchaseOrder),
-                purchaseOrder.getLines().stream().map(this::toDto).toList()
-        );
-    }
-
-    private PurchaseOrderLineSummary toDto(PurchaseOrderLine line) {
-        return new PurchaseOrderLineSummary(
-                line.getProduct().getId(),
-                line.getProduct().getName(),
-                line.getQuantity(),
-                line.getUnitPriceAtOrder(),
-                calculateLineTotal(line)
-        );
-    }
-
-    private BigDecimal calculateLineTotal(PurchaseOrderLine line) {
-        return line.getUnitPriceAtOrder().multiply(BigDecimal.valueOf(line.getQuantity()));
-    }
-
-    private BigDecimal calculateOrderTotal(PurchaseOrder purchaseOrder) {
-
-        return purchaseOrder.getLines().stream()
-                .map(this::calculateLineTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
 }
