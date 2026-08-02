@@ -2,6 +2,7 @@ package dev.toleflaco.erpmcpserver;
 
 import dev.toleflaco.erpmcpserver.invoice.InvoiceQueryTools;
 import dev.toleflaco.erpmcpserver.product.ProductQueryTools;
+import dev.toleflaco.erpmcpserver.product.ProductWriteTools;
 import dev.toleflaco.erpmcpserver.purchaseorder.PurchaseOrderQueryTools;
 import dev.toleflaco.erpmcpserver.supplier.SupplierQueryTools;
 import dev.toleflaco.erpmcpserver.supplier.SupplierWriteTools;
@@ -24,9 +25,11 @@ public class ErpMcpServerApplication {
             ProductQueryTools productQueryTools,
             SupplierQueryTools supplierQueryTools,
             PurchaseOrderQueryTools purchaseOrderQueryTools,
-            InvoiceQueryTools invoiceQueryTools, SupplierWriteTools supplierWriteTools) {
+            InvoiceQueryTools invoiceQueryTools,
+            SupplierWriteTools supplierWriteTools,
+            ProductWriteTools productWriteTools) {
         return MethodToolCallbackProvider.builder()
-                .toolObjects(productQueryTools, supplierQueryTools, purchaseOrderQueryTools, invoiceQueryTools, supplierWriteTools)
+                .toolObjects(productQueryTools, supplierQueryTools, purchaseOrderQueryTools, invoiceQueryTools, supplierWriteTools, productWriteTools)
                 .build();
     }
 
