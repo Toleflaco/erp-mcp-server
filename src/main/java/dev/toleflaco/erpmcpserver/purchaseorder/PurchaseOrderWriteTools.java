@@ -65,9 +65,9 @@ public class PurchaseOrderWriteTools {
         }
         if (!errors.isEmpty()) throw new IllegalArgumentException(String.join("; ", errors));
 
-        PurchaseOrder purchaseOrder = new PurchaseOrder(supplier,PurchaseOrderStatus.DRAFT);
+        PurchaseOrder purchaseOrder = new PurchaseOrder(supplier, PurchaseOrderStatus.DRAFT);
 
-        for (int i=0; i< request.lines().size(); i++) {
+        for (int i = 0; i < request.lines().size(); i++) {
             Product product = productsByLineIndex.get(i);
             CreatePurchaseOrderLineRequest lineRequest = request.lines().get(i);
             PurchaseOrderLine line = new PurchaseOrderLine(
@@ -81,4 +81,22 @@ public class PurchaseOrderWriteTools {
         PurchaseOrder saved = purchaseOrderRepository.save(purchaseOrder);
         return PurchaseOrderMapper.toInfo(saved);
     }
+
+    @Transactional
+    @Tool(description = "Send a purchase order. The order must exist and be in DRAFT status.")
+    public void sendPurchaseOrder(
+            @ToolParam(description = "Purchase order ID") Long purchaseOrderId) {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
+                .orElseThrow(()->new IllegalArgumentException("Purchase Order not found"));
+        purchaseOrder.send();
+    }
+    @Transactional
+    @Tool(description = "Cancel a purchase order. The order must exist and be in DRAFT or SENT status.")
+    public void cancelPurchaseOrder(
+            @ToolParam(description = "Purchase order ID") Long purchaseOrderId) {
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
+                .orElseThrow(()->new IllegalArgumentException("Purchase Order not found"));
+        purchaseOrder.cancel();
+    }
 }
+

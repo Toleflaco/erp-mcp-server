@@ -74,7 +74,7 @@ public class PurchaseOrder {
         return createdAt;
     }
 
-    public void setStatus(PurchaseOrderStatus status) {
+    private void setStatus(PurchaseOrderStatus status) {
         this.status = status;
     }
 
@@ -91,5 +91,19 @@ public class PurchaseOrder {
     public void removeLine(PurchaseOrderLine line) {
         lines.remove(line);
         line.setPurchaseOrder(null);
+    }
+
+    public void send() {
+        if (this.status != PurchaseOrderStatus.DRAFT) {
+            throw new IllegalStateException("Cannot send order in status " + this.status + ", must be DRAFT");
+        }
+        this.status = PurchaseOrderStatus.SENT;
+    }
+
+    public void cancel() {
+        if (this.status != PurchaseOrderStatus.DRAFT && this.status != PurchaseOrderStatus.SENT) {
+            throw new IllegalStateException("Cannot cancel order in status " + this.status + ", must be DRAFT or SENT");
+        }
+        this.status = PurchaseOrderStatus.CANCELLED;
     }
 }
