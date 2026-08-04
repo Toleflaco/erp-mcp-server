@@ -106,4 +106,12 @@ public class PurchaseOrder {
         }
         this.status = PurchaseOrderStatus.CANCELLED;
     }
+
+
+    public void receive() {
+        if (this.status != PurchaseOrderStatus.SENT) {
+            throw new IllegalStateException("Cannot receive order in status " + this.status + ", must be SENT");
+        }
+        this.status = PurchaseOrderStatus.RECEIVED;
+    }
 }
