@@ -16,16 +16,14 @@ public class ProductWriteTools {
     }
 
     @Transactional
-    @Tool(description = "Updates the stock of a product, given its product Id.")
+    @Tool(description = "Replaces the stock of a product, given its product Id.")
     public void updateProductStock(
             @ToolParam(description = "The identifier of the product whose stock will be updated.") Long productId,
             @ToolParam(description = "The new stock quantity for the product. Must be zero or positive.") int newStock) {
 
-        if (newStock < 0) {
-            throw new IllegalArgumentException("Stock cannot be negative");
-        }
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-        product.setStock(newStock);
+        product.adjustStockTo(newStock);
     }
 }

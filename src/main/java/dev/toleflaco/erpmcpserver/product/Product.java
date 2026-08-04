@@ -79,7 +79,7 @@ public class Product {
         this.unitPrice = unitPrice;
     }
 
-    public void setStock(int stock) {
+    private void setStock(int stock) {
         this.stock = stock;
     }
 
@@ -87,5 +87,17 @@ public class Product {
         this.minStock = minStock;
     }
 
+    public void receiveStock(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive, got: " + quantity);
+        }
+        this.stock += quantity;
+    }
 
+    public void adjustStockTo(int newStock) {
+        if (newStock < 0) {
+            throw new IllegalArgumentException("Stock cannot be negative, got: " + newStock);
+        }
+        this.stock = newStock;
+    }
 }
