@@ -87,16 +87,35 @@ public class PurchaseOrderWriteTools {
     public void sendPurchaseOrder(
             @ToolParam(description = "Purchase order ID") Long purchaseOrderId) {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
-                .orElseThrow(()->new IllegalArgumentException("Purchase Order not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Purchase Order not found"));
         purchaseOrder.send();
     }
+
     @Transactional
     @Tool(description = "Cancel a purchase order. The order must exist and be in DRAFT or SENT status.")
     public void cancelPurchaseOrder(
             @ToolParam(description = "Purchase order ID") Long purchaseOrderId) {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
-                .orElseThrow(()->new IllegalArgumentException("Purchase Order not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Purchase Order not found"));
         purchaseOrder.cancel();
     }
+
+    @Transactional
+    @Tool(description = "Receive a purchase order, incrementing the stock of each ordered product by its line quantity." +
+            " The order must exist and be in SENT status.")
+    public void receivePurchaseOrder(
+            @ToolParam(description = "Purchase order ID") Long purchaseOrderId) {
+
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findByIdWithLinesAndProducts(purchaseOrderId)
+                .orElseThrow(() -> new IllegalArgumentException("Purchase Order not found"));
+        purchaseOrder.receive();
+        for (PurchaseOrderLine line : purchaseOrder.getLines()) {
+            Product product = line.getProduct();
+            product.receiveStock(line.getQuantity());
+        }
+
+
+    }
+
 }
 
