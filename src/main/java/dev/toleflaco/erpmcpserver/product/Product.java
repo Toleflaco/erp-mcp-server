@@ -24,7 +24,7 @@ public class Product {
     private String name;
     private String category;
 
-    // TODO(sesion-15): revisar precision/scale al migrar a PostgreSQL
+    
     @Column(nullable = false)
     private BigDecimal unitPrice;
 

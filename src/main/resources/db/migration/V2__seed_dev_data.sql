@@ -10,8 +10,7 @@ VALUES (1, 'Andes Green Coffee Import', 'origen@andesgreen.com'),
        (6, 'Dulcinea Azúcares y Siropes', 'comercial@dulcineafoods.es'),
        (7, 'Tea Origins Europa', 'sales@teaorigins.eu');
 
-ALTER TABLE suppliers
-    ALTER COLUMN id RESTART WITH 100;
+ALTER SEQUENCE suppliers_id_seq RESTART WITH 100;
 
 ------------------------------------------------------------
 -- Bloque 2: products
@@ -43,8 +42,7 @@ VALUES (1, 'Café verde Colombia Supremo', 'COFFEE', 12.50, 40, 20, 1),
        (18, 'Té verde Sencha', 'TEA', 28.00, 25, 30, 7),
        (19, 'Té negro Assam', 'TEA', 24.00, 30, 15, 7);
 
-ALTER TABLE products
-    ALTER COLUMN id RESTART WITH 100;
+ALTER SEQUENCE products_id_seq RESTART WITH 100;
 
 ------------------------------------------------------------
 -- Bloque 3: purchase_orders
@@ -56,8 +54,7 @@ VALUES (1, 1, 'RECEIVED', TIMESTAMP WITH TIME ZONE '2026-07-10 09:15:00+00'),
        (4, 7, 'DRAFT', TIMESTAMP WITH TIME ZONE '2026-07-28 08:00:00+00'),
        (5, 2, 'CANCELLED', TIMESTAMP WITH TIME ZONE '2026-07-15 16:10:00+00');
 
-ALTER TABLE purchase_orders
-    ALTER COLUMN id RESTART WITH 100;
+ALTER SEQUENCE purchase_orders_id_seq RESTART WITH 100;
 
 ------------------------------------------------------------
 -- Bloque 4: purchase_order_lines
@@ -81,8 +78,7 @@ VALUES (1, 1, 1, 50, 12.00),
        (12, 5, 4, 30, 16.90),
        (13, 5, 6, 20, 18.50);
 
-ALTER TABLE purchase_order_lines
-    ALTER COLUMN id RESTART WITH 100;
+ALTER SEQUENCE purchase_order_lines_id_seq RESTART WITH 100;
 
 ------------------------------------------------------------
 -- Bloque 5: invoices
@@ -91,5 +87,4 @@ INSERT INTO invoices (id, purchase_order_id, amount, status, issued_at)
 VALUES (1, 1, 1800.00, 'PAID', TIMESTAMP WITH TIME ZONE '2026-07-12 10:00:00+00'),
        (2, 2, 376.50, 'PENDING', TIMESTAMP WITH TIME ZONE '2026-07-22 09:30:00+00');
 
-ALTER TABLE invoices
-    ALTER COLUMN id RESTART WITH 100;
+ALTER SEQUENCE invoices_id_seq RESTART WITH 100;
