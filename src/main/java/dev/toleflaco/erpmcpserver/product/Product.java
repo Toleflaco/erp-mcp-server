@@ -24,7 +24,7 @@ public class Product {
     private String name;
     private String category;
 
-    
+
     @Column(nullable = false)
     private BigDecimal unitPrice;
 
