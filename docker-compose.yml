@@ -1,4 +1,18 @@
 services:
+  app:
+    container_name: erp-app
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/erp
+      SPRING_DATASOURCE_USERNAME: erp
+      SPRING_DATASOURCE_PASSWORD: erp
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
   postgres:
     image: postgres:17-alpine
     container_name: erp-postgres
