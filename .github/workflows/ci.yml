@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -30,7 +30,7 @@ jobs:
     needs: build-and-test
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build Docker image
         run: docker build -t erp-mcp-server:ci .
@@ -40,23 +40,26 @@ jobs:
     needs: docker-build
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Start compose stack
         run: docker compose up --build -d --wait --wait-timeout 60
 
       - name: Verify MCP endpoint responds
         run: |
-          for i in {1..10}; do
-            response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/mcp)
+          for i in {1..15}; do
+            response=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/mcp || echo "000")
             if [ "$response" = "400" ]; then
-              echo "MCP endpoint responded with expected 400"
-              curl -s http://localhost:8080/mcp | grep -q "Invalid Accept header" && exit 0
+              body=$(curl -s http://localhost:8080/mcp || echo "")
+              if echo "$body" | grep -q "Invalid Accept header"; then
+                echo "MCP endpoint responded with expected 400 and message"
+                exit 0
+              fi
             fi
-            echo "Attempt $i: got $response, retrying in 2s..."
-            sleep 2
+            echo "Attempt $i: got HTTP $response, retrying in 3s..."
+            sleep 3
           done
-          echo "MCP endpoint did not respond as expected after 10 attempts"
+          echo "MCP endpoint did not respond as expected after 15 attempts"
           exit 1
 
       - name: Show logs on failure
